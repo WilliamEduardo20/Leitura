@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leitor Responsivo Profissional</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <button id="btn-menu" class="botao-alternar-menu">⚙️ Ajustes</button>
+
+    <aside id="menu" class="menu-lateral menu-escondido">
+        <h3 class="titulo-do-menu">Configurações</h3>
+
+        <div class="grupo-config">
+            <span class="rotulo">Capítulo</span>
+            <details class="dropdown-custom" id="drop-cap-menu">
+                <summary><span id="texto-cap-menu">Carregando...</span></summary>
+                <ul class="opcoes-lista" id="lista-cap-menu"></ul>
+            </details>
+        </div>
+
+        <div class="grupo-config">
+            <span class="rotulo">Tema de Fundo</span>
+            <details class="dropdown-custom" id="drop-tema">
+                <summary><span id="texto-tema-selecionado">Webnovel (Escuro)</span></summary>
+                <ul class="opcoes-lista">
+                    <li onclick="escolherTema('webnovel')">Webnovel (Escuro)</li>
+                    <li onclick="escolherTema('claro')">Modo Claro</li>
+                    <li onclick="escolherTema('sepia')">Sépia</li>
+                    <li onclick="escolherTema('noite')">Preto Absoluto</li>
+                </ul>
+            </details>
+        </div>
+
+        <div class="grupo-config">
+            <span class="rotulo">Tamanho da Fonte</span>
+            <div class="linha">
+                <button id="fonte-menos" class="botao-controle">-</button>
+                <span id="visor-fonte" class="visor-numerico">18</span>
+                <button id="fonte-mais" class="botao-controle">+</button>
+            </div>
+        </div>
+
+        <div class="grupo-config">
+            <span class="rotulo">Espaçamento</span>
+            <div class="linha">
+                <button id="espaco-menos" class="botao-controle">-</button>
+                <span id="visor-espaco" class="visor-numerico">1.6</span>
+                <button id="espaco-mais" class="botao-controle">+</button>
+            </div>
+        </div>
+    </aside>
+
+    <main class="area-leitura">
+        <h1 id="titulo-capitulo" class="capitulo-titulo">Carregando...</h1>
+        
+        <div class="navegacao-capitulos nav-topo">
+            <button id="btn-anterior-topo" class="botao-controle">⬅</button>
+            
+            <details class="dropdown-custom" id="drop-cap-topo">
+                <summary><span id="texto-cap-topo">Carregando...</span></summary>
+                <ul class="opcoes-lista" id="lista-cap-topo"></ul>
+            </details>
+
+            <button id="btn-proximo-topo" class="botao-controle">➡</button>
+        </div>
+
+        <div id="conteudo-capitulo"></div>
+
+        <div class="navegacao-capitulos nav-inferior">
+            <button id="btn-anterior" class="botao-controle">⬅ Capítulo Anterior</button>
+            <button id="btn-proximo" class="botao-controle">Próximo Capítulo ➡</button>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
