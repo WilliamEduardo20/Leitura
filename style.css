@@ -33,6 +33,23 @@ body {
     z-index: 999; box-shadow: 0 0 20px rgba(0,0,0,0.5);
 }
 
+/* Estilo base para o botão de voltar ao topo */
+.botao-voltar-topo {
+    position: fixed;
+    z-index: 1000;
+    background-color: var(--cor-de-fundo);
+    color: var(--cor-do-texto);
+    border: 1px solid rgba(128, 128, 128, 0.5);
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    
+    /* Posição padrão (Desktop - Topo Esquerdo, abaixo do de ajustes) */
+    top: 65px; 
+    left: 15px;
+}
+
 @media (min-width: 601px) {
     .menu-lateral { top: 0; left: 0; width: var(--largura-do-menu); height: 100vh; padding-top: 80px; }
     .menu-escondido { transform: translateX(-105%); }
@@ -41,6 +58,17 @@ body {
 @media (max-width: 600px) {
     .menu-lateral { bottom: 0; left: 0; width: 100%; height: auto; border-radius: 20px 20px 0 0; border-top: 2px solid rgba(128, 128, 128, 0.3); }
     .menu-escondido { transform: translateY(100%); }
+
+    .botao-alternar-menu {
+        top: auto; left: auto; /* Reseta o posicionamento original */
+        bottom: 20px; right: 20px; /* Fixa no canto inferior direito */
+    }
+
+    .botao-voltar-topo {
+        top: auto; left: auto;
+        bottom: 75px; /* Fica exatamente em cima do botão de Ajustes */
+        right: 20px;
+    }
 }
 
 /* * DROPDOWNS CUSTOMIZADOS E BONITOS */
@@ -102,7 +130,7 @@ body {
 
 /* * ÁREA DE TEXTO E NAVEGAÇÃO */
 .area-leitura {
-    margin: 0 auto; padding: 100px 20px 60px 20px; max-width: 750px;
+    margin: 0 auto; padding: 20px 20px 60px 20px; max-width: 750px;
     font-size: var(--tamanho-da-fonte); line-height: var(--espacamento-entre-linhas);
 }
 

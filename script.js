@@ -154,3 +154,10 @@ document.getElementById('espaco-mais').onclick = () => { if(config.espaco < 3.0)
 document.getElementById('espaco-menos').onclick = () => { if(config.espaco > 1.0) { config.espaco -= 0.2; atualizarEspaco(); } };
 
 iniciarLeitor();
+
+document.getElementById('btn-topo').addEventListener('click', () => {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth' // Rolagem suave
+    });
+});
