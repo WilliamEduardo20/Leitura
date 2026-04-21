@@ -1,3 +1,4 @@
+//TODO - Variáveis globais
 const menu = document.getElementById('menu');
 const btnMenu = document.getElementById('btn-menu');
 const raiz = document.documentElement;
@@ -25,6 +26,7 @@ let config = { fonte: 18, espaco: 1.6, tema: 'webnovel', capituloAtual: 0 };
 let menuAberto = false;
 let capitulosJson = [];
 
+//* - Temas de cores pré-definidos
 const temas = {
     webnovel: { fundo: '#1b1e25', texto: '#a4a7ab', nome: 'Webnovel (Escuro)' },
     claro: { fundo: '#ffffff', texto: '#222222', nome: 'Modo Claro' },
@@ -64,35 +66,84 @@ function escolherTema(idTema) {
     document.getElementById('drop-tema').removeAttribute('open');
 }
 
+let catalogoCompleto = []; // Armazenará a lista do catalogo.json
+
+// Função auxiliar para descobrir o nome do ficheiro baseado no número do capítulo
+function obterNomeArquivoJSON(numeroCapitulo) {
+    // Excepção para o seu primeiro ficheiro que agrupa do 160 ao 165
+    if (numeroCapitulo >= 160 && numeroCapitulo <= 165) {
+        return '160-165.json';
+    }
+    
+    // Lógica matemática para o novo padrão (ex: 166-170, 171-175, 181-185)
+    // Subtraímos 1 para alinhar o agrupamento, dividimos/multiplicamos por 5, e somamos 1
+    const inicio = Math.floor((numeroCapitulo - 1) / 5) * 5 + 1;
+    const fim = inicio + 4;
+    
+    return `${inicio}-${fim}.json`;
+}
+
 async function carregarLivro() {
     try {
-        const response = await fetch('./capitulos/180-185.json');
-        const data = await response.json();
-        capitulosJson = data.capitulos;
+        // 1. Carrega o catálogo completo
+        const responseCatalogo = await fetch('./capitulos/catalogo.json');
+        const dataCatalogo = await responseCatalogo.json();
+        catalogoCompleto = dataCatalogo.capitulos;
         
-        const optionsHtml = capitulosJson.map((cap, index) => 
+        // 2. Preenche os menus suspensos (drop-cap-todo) com base no catálogo
+        const optionsHtml = catalogoCompleto.map((cap, index) => 
             `<li onclick="escolherCapitulo(${index})">${cap.titulo}</li>`
         ).join('');
         
         listaCapMenu.innerHTML = optionsHtml;
         listaCapTopo.innerHTML = optionsHtml;
 
-        renderizarCapitulo(config.capituloAtual);
+        // 3. Carrega o capítulo salvo na configuração (ou o primeiro da lista)
+        const indexInicial = config.capituloAtual !== undefined ? config.capituloAtual : 0;
+        await escolherCapitulo(indexInicial);
+
     } catch (erro) {
         tituloEl.innerText = "Erro!";
-        conteudoEl.innerHTML = "<p>Não foi possível carregar o arquivo capitulos.json. Use um servidor local.</p>";
+        conteudoEl.innerHTML = "<p>Não foi possível carregar o arquivo catalogo.json. Use um servidor local.</p>";
+        console.error("Erro ao carregar o livro:", erro);
     }
 }
 
-function renderizarCapitulo(index) {
-    if (index < 0 || index >= capitulosJson.length) return;
+// Nova função assíncrona que cuida de baixar o JSON respectivo e repassar para a renderização
+async function escolherCapitulo(index) {
+    if (index < 0 || index >= catalogoCompleto.length) return;
+
+    try {
+        const infoCapitulo = catalogoCompleto[index];
+        const nomeArquivo = obterNomeArquivoJSON(infoCapitulo.capitulo_numero);
+        
+        // Busca APENAS o JSON que contém o capítulo escolhido
+        const response = await fetch(`./capitulos/${nomeArquivo}`);
+        const data = await response.json();
+        
+        // Encontra o conteúdo específico do capítulo dentro do JSON carregado
+        const capConteudo = data.capitulos.find(c => c.capitulo_numero === infoCapitulo.capitulo_numero);
+        
+        if (capConteudo) {
+            renderizarCapitulo(index, capConteudo);
+        } else {
+            throw new Error("Capítulo não encontrado dentro do arquivo fornecido.");
+        }
+    } catch (erro) {
+        tituloEl.innerText = "Erro ao carregar capítulo!";
+        conteudoEl.innerHTML = `<p>Não foi possível carregar o conteúdo. Detalhes: ${erro.message}</p>`;
+        console.error("Erro em escolherCapitulo:", erro);
+    }
+}
+
+// A função de renderizar agora recebe o índice (para gerenciar botões e menu) e os dados diretos
+function renderizarCapitulo(index, capData) {
+    tituloEl.innerText = capData.titulo;
+    textoCapMenu.innerText = `Capítulo ${capData.capitulo_numero}`;
+    textoCapTopo.innerText = capData.titulo;
     
-    const cap = capitulosJson[index];
-    tituloEl.innerText = cap.titulo;
-    textoCapMenu.innerText = `Capítulo ${cap.capitulo_numero}`;
-    textoCapTopo.innerText = cap.titulo;
-    
-    conteudoEl.innerHTML = cap.conteudo.map(p => 
+    // Processa os parágrafos
+    conteudoEl.innerHTML = capData.conteudo.map(p => 
         p.trim() === "" ? "<br><br>" : `<p class="texto-p">${p}</p>`
     ).join('');
 
@@ -104,10 +155,14 @@ function renderizarCapitulo(index) {
         itens.forEach((li, i) => li.classList.toggle('capitulo-ativo', i === index));
     });
 
+    // Desativa botões de navegação nos extremos do catálogo
     const ehOPrimeiro = (index === 0);
-    const ehOUltimo = (index === capitulosJson.length - 1);
-    btnAntTopo.disabled = ehOPrimeiro; btnAntFundo.disabled = ehOPrimeiro;
-    btnProxTopo.disabled = ehOUltimo; btnProxFundo.disabled = ehOUltimo;
+    const ehOUltimo = (index === catalogoCompleto.length - 1);
+    
+    btnAntTopo.disabled = ehOPrimeiro; 
+    btnAntFundo.disabled = ehOPrimeiro;
+    btnProxTopo.disabled = ehOUltimo; 
+    btnProxFundo.disabled = ehOUltimo;
 
     salvarConfiguracoes();
     window.scrollTo(0, 0);
