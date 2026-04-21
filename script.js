@@ -66,7 +66,7 @@ function escolherTema(idTema) {
 
 async function carregarLivro() {
     try {
-        const response = await fetch('./capitulos/175-180.json');
+        const response = await fetch('./capitulos/180-185.json');
         const data = await response.json();
         capitulosJson = data.capitulos;
         
