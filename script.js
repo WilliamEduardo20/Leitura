@@ -189,9 +189,24 @@ function aplicarTema(nome) {
 }
 
 btnMenu.onclick = () => {
+    // Alterna o estado do menu
     menuAberto = !menuAberto;
+    
+    // Toggle da classe que esconde o menu lateral
     menu.classList.toggle('menu-escondido', !menuAberto);
-    btnMenu.innerText = menuAberto ? "✕ Fechar" : "⚙️ Ajustes";
+    
+    // Atualiza o conteúdo do botão apenas com ícones
+    if (menuAberto) {
+        // Quando aberto, exibe o ícone de "X" para fechar
+        btnMenu.innerHTML = '<i class="bi bi-x-lg"></i>';
+    } else {
+        // Quando fechado, restaura a estrutura de ícones duplos
+        // O CSS (icone-pc e icone-mobile) cuidará de qual aparecerá dependendo da tela
+        btnMenu.innerHTML = `
+            <i class="bi bi-list icone-pc"></i>
+            <i class="bi bi-three-dots icone-mobile"></i>
+        `;
+    }
 };
 
 const voltarCap = () => escolherCapitulo(config.capituloAtual - 1);

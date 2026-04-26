@@ -145,3 +145,43 @@ body {
 .nav-topo .botao-controle { flex: 1; }
 
 .nav-inferior { margin-top: 50px; }
+
+/* * ESTILO DOS BOTÕES CIRCULARES (SOMENTE ÍCONES) */
+.botao-alternar-menu, .botao-voltar-topo {
+    position: fixed;
+    z-index: 1000;
+    width: 50px;             /* Tamanho fixo para ser um círculo */
+    height: 50px;
+    padding: 0;              /* Remove o padding lateral antigo */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;      /* Torna o botão redondo */
+    font-size: 24px;         /* Aumenta o tamanho do ícone */
+    background-color: var(--cor-de-fundo);
+    color: var(--cor-do-texto);
+    border: 1px solid rgba(128, 128, 128, 0.5);
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    transition: all 0.3s ease;
+}
+
+/* Ajuste de posição para Desktop */
+@media (min-width: 601px) {
+    .botao-alternar-menu { top: 15px; left: 15px; }
+    .botao-voltar-topo { top: 75px; left: 15px; }
+    
+    /* Mostra lista no PC, esconde três pontos */
+    .icone-mobile { display: none; }
+    .icone-pc { display: block; }
+}
+
+/* Ajuste de posição para Mobile */
+@media (max-width: 600px) {
+    .botao-alternar-menu { bottom: 20px; right: 20px; top: auto; left: auto; }
+    .botao-voltar-topo { bottom: 80px; right: 20px; top: auto; left: auto; }
+
+    /* Mostra três pontos no Mobile, esconde lista */
+    .icone-pc { display: none; }
+    .icone-mobile { display: block; }
+}
