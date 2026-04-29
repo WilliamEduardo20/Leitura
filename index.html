@@ -8,12 +8,29 @@
     <title>Leitor Responsivo Profissional</title>
 </head>
 <body>
+    <nav id="nav" class="nav-bar fechado">
+        <ul class="options">
+            <li id="open" class="menu">
+                <i class="bi bi-list"></i>
+                <p>Configurações</p>
+            </li>
+            <li id="btn-capitulos" class="chapters">
+                <i class="bi bi-view-list"></i>
+                <p>Capítulos</p>
+            </li>
+            <li id="btn-menu" class="config">
+                <i class="bi bi-gear"></i>
+                <p>Configurações</p>
+            </li>
+            <li class="comments">
+                <i class="bi bi-chat-left-text"></i>
+                <p>Comentários</p>
+            </li>
+        </ul>
+    </nav>
+
     <button id="btn-topo" class="botao-voltar-topo" title="Voltar ao Topo">
         <i class="bi bi-arrow-up-short"></i>
-    </button>
-    <button id="btn-menu" class="botao-alternar-menu" title="Ajustes">
-        <i class="bi bi-list icone-pc"></i>
-        <i class="bi bi-three-dots icone-mobile"></i>
     </button>
 
     <aside id="menu" class="menu-lateral menu-escondido">
@@ -57,6 +74,12 @@
                 <button id="espaco-mais" class="botao-controle">+</button>
             </div>
         </div>
+    </aside>
+
+    <aside id="modal-capitulos" class="menu-lateral menu-escondido">
+        <h3 class="titulo-do-menu">Índice de Capítulos</h3>
+        <ul id="lista-todos-capitulos" class="lista-capitulos-modal">
+            </ul>
     </aside>
 
     <main class="area-leitura">

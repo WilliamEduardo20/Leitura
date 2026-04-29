@@ -1,134 +1,179 @@
-/* * VARIÁVEIS DO TEMA */
+/* * ==========================================================================
+/* * 1. VARIÁVEIS DO TEMA E CONFIGURAÇÕES RAIZ
+/* * ========================================================================== */
 :root {
+    /* ? Cores e Identidade */
     --cor-de-fundo: #1b1e25; 
     --cor-do-texto: #a4a7ab;
-    --tamanho-da-fonte: 18px;
-    --espacamento-entre-linhas: 1.6;
-    --largura-do-menu: 280px;
+    --cor-borda: rgba(128, 128, 128, 0.3);
+    --cor-overlay: rgba(128, 128, 128, 0.1);
 }
 
+/* * Estilos Globais do Body */
 body {
     background-color: var(--cor-de-fundo);
     color: var(--cor-do-texto);
     font-family: 'Segoe UI', Georgia, serif;
-    margin: 0; padding: 0;
+    margin: 0; 
+    padding: 0;
     transition: background-color 0.3s, color 0.3s;
     overflow-x: hidden;
 }
 
-/* * BOTÃO DE ABRIR/FECHAR MENU */
-.botao-alternar-menu {
-    position: fixed; top: 15px; left: 15px; z-index: 1000;
-    background-color: var(--cor-de-fundo); color: var(--cor-do-texto);
-    border: 1px solid rgba(128, 128, 128, 0.5); padding: 10px 15px;
-    border-radius: 8px; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-}
-
-/* * MENU LATERAL */
-.menu-lateral {
-    position: fixed; background-color: var(--cor-de-fundo);
-    border: 1px solid rgba(128, 128, 128, 0.2); padding: 25px; box-sizing: border-box;
-    display: flex; flex-direction: column; gap: 20px;
-    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    z-index: 999; box-shadow: 0 0 20px rgba(0,0,0,0.5);
-}
-
-/* Estilo base para o botão de voltar ao topo */
-.botao-voltar-topo {
+/* * ==========================================================================
+/* * 2. BARRA DE NAVEGAÇÃO LATERAL (NAV-BAR)
+/* * ========================================================================== */
+.nav-bar {
     position: fixed;
-    z-index: 1000;
+    top: 0;
+    right: 0;
     background-color: var(--cor-de-fundo);
     color: var(--cor-do-texto);
+    height: 100vh;
     border: 1px solid rgba(128, 128, 128, 0.5);
-    padding: 10px 15px;
-    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     cursor: pointer;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-    
-    /* Posição padrão (Desktop - Topo Esquerdo, abaixo do de ajustes) */
-    top: 65px; 
-    left: 15px;
+    z-index: 1001; /* ! Garantir que fique acima de outros elementos fixos */
 }
 
+.nav-bar .options {
+    margin: 0;
+    padding: 20px;
+    list-style: none;
+}
+
+.nav-bar .options li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 30px;
+    cursor: pointer;
+}
+
+.nav-bar .options li i { font-size: 20px; height: 20px; display: flex; }
+.nav-bar .options li p { margin: 0; }
+
+/* ? Estado Fechado da NavBar */
+.nav-bar.fechado .options li p { display: none; }
+
+/* * ==========================================================================
+/* * 3. MENUS LATERAIS (CONFIGURAÇÕES E CAPÍTULOS)
+/* * ========================================================================== */
+.menu-lateral {
+    position: fixed;
+    background-color: var(--cor-de-fundo);
+    border: 1px solid var(--cor-borda);
+    padding: 25px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 999;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+}
+
+/* ? Posicionamento Desktop */
 @media (min-width: 601px) {
-    .menu-lateral { top: 0; left: 0; width: var(--largura-do-menu); height: 100vh; padding-top: 80px; }
+    .menu-lateral { top: 0; left: 0; width: var(--largura-do-menu); height: 100vh; }
     .menu-escondido { transform: translateX(-105%); }
 }
 
-@media (max-width: 600px) {
-    .menu-lateral { bottom: 0; left: 0; width: 100%; height: auto; border-radius: 20px 20px 0 0; border-top: 2px solid rgba(128, 128, 128, 0.3); }
-    .menu-escondido { transform: translateY(100%); }
-
-    .botao-alternar-menu {
-        top: auto; left: auto; /* Reseta o posicionamento original */
-        bottom: 20px; right: 20px; /* Fixa no canto inferior direito */
-    }
-
-    .botao-voltar-topo {
-        top: auto; left: auto;
-        bottom: 75px; /* Fica exatamente em cima do botão de Ajustes */
-        right: 20px;
-    }
-}
-
-/* * DROPDOWNS CUSTOMIZADOS E BONITOS */
-.dropdown-custom { position: relative; width: 100%; }
-
-.dropdown-custom summary {
-    list-style: none; padding: 10px 15px; background: rgba(128, 128, 128, 0.1);
-    border: 1px solid rgba(128, 128, 128, 0.3); border-radius: 6px; cursor: pointer;
-    display: flex; justify-content: space-between; align-items: center; gap: 10px;
-    user-select: none; font-size: 15px;
-}
-
-.dropdown-custom summary::-webkit-details-marker { display: none; }
-.dropdown-custom summary::after { content: '▼'; font-size: 0.8em; opacity: 0.6; flex-shrink: 0; }
-.dropdown-custom[open] summary::after { content: '▲'; }
-
-.dropdown-custom summary span {
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex-grow: 1;
-}
-
-.opcoes-lista {
-    position: absolute; top: 100%; left: 0; right: 0;
-    background-color: var(--cor-de-fundo); border: 1px solid rgba(128, 128, 128, 0.3);
-    border-radius: 6px; margin: 5px 0 0 0; padding: 0; list-style: none;
-    max-height: 250px; overflow-y: auto; z-index: 2000;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-    scroll-behavior: smooth; /* Rolagem suave */
-}
-
-.opcoes-lista li {
-    padding: 12px 15px; cursor: pointer; border-bottom: 1px solid rgba(128, 128, 128, 0.1);
-    color: var(--cor-do-texto); font-size: 15px; transition: background 0.2s;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-}
-.opcoes-lista li:hover { background: rgba(128, 128, 128, 0.2); }
-.opcoes-lista li:last-child { border-bottom: none; }
-
-/* Destaque para o capítulo atual na lista */
-.opcoes-lista li.capitulo-ativo {
-    background: rgba(128, 128, 128, 0.3);
-    font-weight: bold;
-}
-
-/* * ELEMENTOS INTERNOS DO MENU */
+/* ? Títulos e Grupos de Configuração */
 .titulo-do-menu { margin: 0; font-size: 1.1em; text-align: center; opacity: 0.8; }
 .grupo-config { display: flex; flex-direction: column; gap: 8px; }
 .rotulo { font-size: 0.85em; font-weight: bold; color: #888; text-transform: uppercase; }
 .linha { display: flex; align-items: center; gap: 10px; }
 
+/* ? Lista de Capítulos dentro do Modal */
+#modal-capitulos { width: fit-content; }
+
+.lista-capitulos-modal {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    overflow-y: auto;
+    max-height: calc(100vh - 100px);
+    scroll-behavior: smooth;
+}
+
+.lista-capitulos-modal li {
+    padding: 15px;
+    cursor: pointer;
+    border-bottom: 1px solid rgba(128, 128, 128, 0.1);
+    color: var(--cor-do-texto);
+    font-size: 15px;
+    transition: background 0.2s, padding-left 0.2s;
+}
+
+.lista-capitulos-modal li:hover { background: var(--cor-overlay); padding-left: 20px; }
+.lista-capitulos-modal li.capitulo-ativo {
+    background: rgba(128, 128, 128, 0.3);
+    font-weight: bold;
+    border-left: 4px solid var(--cor-do-texto);
+}
+
+/* * ==========================================================================
+/* * 4. COMPONENTES DE UI (DROPDOWNS E BOTÕES)
+/* * ========================================================================== */
+
+/* ? Dropdowns Customizados */
+.dropdown-custom { position: relative; width: 100%; }
+
+.dropdown-custom summary {
+    list-style: none; padding: 10px 15px; background: var(--cor-overlay);
+    border: 1px solid var(--cor-borda); border-radius: 6px; cursor: pointer;
+    display: flex; justify-content: space-between; align-items: center; gap: 10px;
+    user-select: none; font-size: 15px;
+}
+
+.dropdown-custom summary::-webkit-details-marker { display: none; }
+.dropdown-custom summary::after { content: '▼'; font-size: 0.8em; opacity: 0.6; }
+.dropdown-custom[open] summary::after { content: '▲'; }
+
+.opcoes-lista {
+    position: absolute; top: 100%; left: 0; right: 0;
+    background-color: var(--cor-de-fundo); border: 1px solid var(--cor-borda);
+    border-radius: 6px; margin: 5px 0 0 0; padding: 0; list-style: none;
+    max-height: 250px; overflow-y: auto; z-index: 2000;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+}
+
+.opcoes-lista li {
+    padding: 12px 15px; cursor: pointer; border-bottom: 1px solid rgba(128, 128, 128, 0.1);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    font-size: 15px;
+}
+
+.opcoes-lista li.capitulo-ativo { background: rgba(128, 128, 128, 0.3); font-weight: bold; }
+
+/* ? Botões de Controle (+, -, Próximo, Anterior) */
 .botao-controle {
-    flex: 1; background: rgba(128, 128, 128, 0.1); border: 1px solid rgba(128, 128, 128, 0.3);
-    color: var(--cor-do-texto); padding: 10px; border-radius: 6px; cursor: pointer; font-size: 16px;
-    white-space: nowrap; transition: 0.2s;
+    flex: 1; background: var(--cor-overlay); border: 1px solid var(--cor-borda);
+    color: var(--cor-do-texto); padding: 10px; border-radius: 6px; cursor: pointer;
+    font-size: 16px; transition: 0.2s;
 }
 .botao-controle:hover:not(:disabled) { background: rgba(128, 128, 128, 0.2); }
 .botao-controle:disabled { opacity: 0.3; cursor: not-allowed; }
 
 .visor-numerico { min-width: 40px; text-align: center; font-weight: bold; font-family: monospace; font-size: 1.1em; }
 
-/* * ÁREA DE TEXTO E NAVEGAÇÃO */
+/* ? Botão Voltar ao Topo Circular */
+.botao-voltar-topo {
+    position: fixed; bottom: 20px; left: 20px; z-index: 1000;
+    width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;
+    border-radius: 50%; font-size: 24px; background-color: var(--cor-de-fundo);
+    color: var(--cor-do-texto); border: 1px solid rgba(128, 128, 128, 0.5);
+    cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3); transition: all 0.3s ease;
+}
+
+/* * ==========================================================================
+/* * 5. ÁREA DE LEITURA E CONTEÚDO
+/* * ========================================================================== */
 .area-leitura {
     margin: 0 auto; padding: 20px 20px 60px 20px; max-width: 750px;
     font-size: var(--tamanho-da-fonte); line-height: var(--espacamento-entre-linhas);
@@ -137,51 +182,37 @@ body {
 .capitulo-titulo { font-size: 1.6em; text-align: center; margin-bottom: 30px; color: #d1d5db; }
 .texto-p { margin-bottom: 20px; text-align: left; }
 
+/* ? Navegação entre capítulos (Topo e Rodapé) */
 .navegacao-capitulos { display: flex; gap: 15px; justify-content: center; align-items: center; }
-
 .nav-topo { margin-bottom: 40px; }
 .nav-topo .dropdown-custom { flex: 2; min-width: 0; }
-.nav-topo .dropdown-custom summary span { text-align: center; font-weight: bold; }
-.nav-topo .botao-controle { flex: 1; }
-
 .nav-inferior { margin-top: 50px; }
 
-/* * ESTILO DOS BOTÕES CIRCULARES (SOMENTE ÍCONES) */
-.botao-alternar-menu, .botao-voltar-topo {
-    position: fixed;
-    z-index: 1000;
-    width: 50px;             /* Tamanho fixo para ser um círculo */
-    height: 50px;
-    padding: 0;              /* Remove o padding lateral antigo */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;      /* Torna o botão redondo */
-    font-size: 24px;         /* Aumenta o tamanho do ícone */
-    background-color: var(--cor-de-fundo);
-    color: var(--cor-do-texto);
-    border: 1px solid rgba(128, 128, 128, 0.5);
-    cursor: pointer;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-    transition: all 0.3s ease;
-}
-
-/* Ajuste de posição para Desktop */
-@media (min-width: 601px) {
-    .botao-alternar-menu { top: 15px; left: 15px; }
-    .botao-voltar-topo { top: 75px; left: 15px; }
-    
-    /* Mostra lista no PC, esconde três pontos */
-    .icone-mobile { display: none; }
-    .icone-pc { display: block; }
-}
-
-/* Ajuste de posição para Mobile */
+/* * ==========================================================================
+/* * 6. RESPONSIVIDADE (MOBILE)
+/* * ========================================================================== */
 @media (max-width: 600px) {
-    .botao-alternar-menu { bottom: 20px; right: 20px; top: auto; left: auto; }
-    .botao-voltar-topo { bottom: 80px; right: 20px; top: auto; left: auto; }
+    /* ? Menu Lateral no Mobile (Slide Up) */
+    .menu-lateral { 
+        bottom: 0; left: 0; width: 100%; height: auto; 
+        border-radius: 20px 20px 0 0; border-top: 2px solid var(--cor-borda); 
+    }
+    .menu-escondido { transform: translateY(100%); }
 
-    /* Mostra três pontos no Mobile, esconde lista */
-    .icone-pc { display: none; }
-    .icone-mobile { display: block; }
+    /* ? Ajuste do Modal de Capítulos */
+    #modal-capitulos { height: 75vw; }
+
+    /* ? NavBar Flutuante (Botões Circulares) */
+    .nav-bar { background-color: transparent; justify-content: end; border: none; box-shadow: none; }
+    .nav-bar .options { display: flex; flex-direction: column-reverse; gap: 20px; }
+    .nav-bar .options li {
+        background-color: var(--cor-de-fundo); border: 1px solid rgba(128, 128, 128, 0.5);
+        padding: 15px; border-radius: 50%; opacity: 0.9;
+        margin-bottom: 0px;
+    }
+    .nav-bar .options li p { display: none; }
+    .nav-bar.fechado .options { height: 40px; overflow: hidden; }
+
+    /* ? Botão Voltar ao Topo */
+    .botao-voltar-topo { bottom: 20px; left: 20px; opacity: 0.9; }
 }
