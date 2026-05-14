@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Regressor's Tale of Cultivation - Novíssima</title>
+    <link rel="stylesheet" href="home.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* Variáveis Globais (herdadas do seu CSS) */
+        :root {
+            --cor-de-fundo: #1b1e25; 
+            --cor-fundo-secundario: #121418;
+            --cor-do-texto: #a4a7ab;
+            --cor-texto-claro: #ffffff;
+            --cor-borda: rgba(128, 128, 128, 0.2);
+            --cor-overlay: rgba(128, 128, 128, 0.1);
+            --azul-claro: #2b59ff;
+            --amarelo-destaque: #ffcc00;
+        }
+
+        * { margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--cor-de-fundo);
+            color: var(--cor-do-texto);
+            overflow-x: hidden;
+        }
+
+        /* Navbar Header (Simplificado para o exemplo) */
+        .site-header {
+            background-color: #0b0f15;
+            border-bottom: 1px solid var(--cor-borda);
+            padding: 18px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo-title { font-family: 'Cinzel', serif; font-size: 24px; color: var(--cor-texto-claro); font-weight: 700; text-decoration: none;}
+
+        /* Container Principal */
+        .page-container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* --- HERO SECTION (Infos da Obra) --- */
+        .novel-hero {
+            display: flex;
+            gap: 40px;
+            background: linear-gradient(180deg, rgba(18,20,24,0) 0%, rgba(18,20,24,0.8) 100%), url('https://images.novelpia.com/imagebox/cover/056e15ca5a23a674852ae07ad36efae8_356298_ori.file') no-repeat center center / cover;
+            border-radius: 15px;
+            padding: 40px;
+            position: relative;
+            box-shadow: inset 0 0 0 2000px rgba(27, 30, 37, 0.85); /* Efeito Blur/Escuro */
+            margin-bottom: 40px;
+        }
+
+        .novel-cover-container {
+            width: 260px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            z-index: 2;
+        }
+
+        .novel-cover-container img {
+            width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+        }
+
+        .novel-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 12px;
+            border-radius: 6px;
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+            border: none;
+            font-size: 14px;
+            transition: all 0.2s;
+            text-transform: uppercase;
+        }
+
+        .btn-ler {
+            background-color: var(--azul-claro);
+            color: #fff;
+        }
+        .btn-ler:hover { background-color: #1d4ed8; }
+
+        .btn-biblioteca {
+            background-color: transparent;
+            color: var(--cor-texto-claro);
+            border: 1px solid var(--cor-borda);
+        }
+        .btn-biblioteca:hover { background-color: var(--cor-overlay); border-color: var(--cor-texto-claro); }
+
+        .novel-info {
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            flex-grow: 1;
+        }
+
+        .novel-title {
+            font-family: 'Cinzel', serif;
+            font-size: 38px;
+            color: var(--cor-texto-claro);
+            line-height: 1.2;
+        }
+
+        .novel-author {
+            color: var(--azul-claro);
+            font-weight: 500;
+            font-size: 16px;
+        }
+
+        .novel-stats {
+            display: flex;
+            gap: 20px;
+            font-size: 14px;
+            color: #d1d5db;
+        }
+        .novel-stats span i { color: var(--amarelo-destaque); margin-right: 5px; }
+
+        .novel-synopsis {
+            line-height: 1.7;
+            font-size: 15px;
+            margin-top: 10px;
+            display: -webkit-box;
+            -webkit-line-clamp: 4;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .novel-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: auto; /* Empurra pro fundo */
+        }
+
+        .tag {
+            background-color: var(--cor-fundo-secundario);
+            color: var(--cor-texto-claro);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            border: 1px solid var(--cor-borda);
+        }
+
+        /* --- CONTENT SECTION (Capítulos + Sidebar) --- */
+        .content-layout {
+            display: flex;
+            gap: 40px;
+            align-items: flex-start;
+        }
+
+        /* Área de Capítulos */
+        .chapters-section {
+            flex-grow: 1;
+            background-color: var(--cor-fundo-secundario);
+            border-radius: 12px;
+            padding: 30px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--cor-borda);
+        }
+
+        .section-header h3 {
+            color: var(--cor-texto-claro);
+            font-size: 20px;
+        }
+
+        .sort-btn {
+            background: transparent;
+            border: 1px solid var(--cor-borda);
+            color: var(--cor-do-texto);
+            padding: 6px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .chapter-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .chapter-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background-color: var(--cor-de-fundo);
+            border-radius: 8px;
+            transition: background-color 0.2s, transform 0.2s;
+            cursor: pointer;
+            border: 1px solid transparent;
+        }
+
+        .chapter-item:hover {
+            background-color: var(--cor-overlay);
+            border-color: var(--cor-borda);
+        }
+
+        .chapter-info { display: flex; flex-direction: column; gap: 5px; }
+        
+        .chapter-title {
+            color: var(--cor-texto-claro);
+            font-weight: 500;
+            font-size: 15px;
+        }
+
+        .chapter-date {
+            font-size: 12px;
+            color: var(--cor-do-texto);
+        }
+
+        /* Sidebar Direita */
+        .sidebar {
+            width: 300px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .info-box {
+            background-color: var(--cor-fundo-secundario);
+            padding: 25px;
+            border-radius: 12px;
+        }
+
+        .info-box h3 {
+            color: var(--cor-texto-claro);
+            font-size: 16px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--cor-borda);
+            padding-bottom: 10px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 13px;
+        }
+        .info-row span:first-child { color: var(--cor-do-texto); }
+        .info-row span:last-child { color: var(--cor-texto-claro); font-weight: 500; }
+
+        /* Responsividade */
+        @media (max-width: 900px) {
+            .novel-hero { flex-direction: column; align-items: center; text-align: center; }
+            .novel-stats, .novel-tags { justify-content: center; }
+            .content-layout { flex-direction: column; }
+            .sidebar { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="site-header">
+        <div class="header-top" style="width: 100%;">
+            <a href="#" class="logo-container">
+                <div class="logo-icon-img">
+                    <i class="fa-solid fa-book-open"></i>
+                </div>
+                <div class="logo-text-box">
+                    <span class="logo-title">NOVÍSSIMA</span>
+                    <span class="logo-subtitle">Novelas e Light Novels</span>
+                </div>
+            </a>
+
+            <div class="search-container">
+                <input type="text" class="search-input" placeholder="Pesquisar Títulos, Autores, Tags...">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+            </div>
+
+            <div class="user-actions">
+                <a href="#" class="action-icon"><i class="fa-regular fa-bell"></i></a>
+                <a href="#" class="action-icon"><i class="fa-solid fa-book-bookmark"></i></a>
+                <button class="btn-login">ENTRAR</button>
+            </div>
+        </div>
+
+        <div class="header-bottom">
+            <ul class="main-nav">
+                <li><a href="#" class="nav-link active"><i class="fa-solid fa-house"></i> Início</a></li>
+                <li><a href="#" class="nav-link"><i class="fa-regular fa-compass"></i> Descobrir</a></li>
+                <li><a href="#" class="nav-link"><i class="fa-solid fa-chart-line"></i> Rankings</a></li>
+                <li><a href="#" class="nav-link"><i class="fa-solid fa-book"></i> Biblioteca</a></li>
+                <li><a href="#" class="nav-link"><i class="fa-solid fa-pen-nib"></i> Escrever</a></li>
+                <li><a href="#" class="nav-link"><i class="fa-solid fa-layer-group"></i> Light Novels</a></li>
+                <li><a href="#" class="nav-link">Categoria</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <div class="page-container">
+        
+        <section class="novel-hero">
+            <div class="novel-cover-container">
+                <img src="https://images.novelpia.com/imagebox/cover/056e15ca5a23a674852ae07ad36efae8_356298_ori.file" alt="Capa da Obra">
+                <div class="novel-actions">
+                    <button class="btn btn-ler">Ler Primeiro Capítulo</button>
+                    <button class="btn btn-biblioteca"><i class="fa-solid fa-bookmark"></i> Adicionar à Biblioteca</button>
+                </div>
+            </div>
+
+            <div class="novel-info">
+                <h1 class="novel-title">A Regressor's Tale of Cultivation</h1>
+                <p class="novel-author">Autor: <a href="#" style="color: inherit;">엄청난 (Tremendous)</a></p>
+                
+                <div class="novel-stats">
+                    <span><i class="fa-solid fa-star"></i> 4.76 (127 Avaliações)</span>
+                    <span><i class="fa-solid fa-list"></i> 861 Capítulos</span>
+                    <span><i class="fa-solid fa-eye"></i> 14.1M Views</span>
+                </div>
+
+                <p class="novel-synopsis">
+                    A caminho de um workshop da empresa, caímos em um mundo de cultivadores imortais enquanto ainda estávamos no carro. Aqueles com raízes espirituais e habilidades únicas foram todos chamados para se juntarem a seitas de cultivo, vivendo prosperamente. Mas eu, não tendo nem raízes espirituais nem habilidades especiais, vivi como um mortal comum por 50 anos, aceitando meu destino até a minha morte...
+                </p>
+
+                <div class="novel-tags">
+                    <span class="tag">#Ação</span>
+                    <span class="tag">#Aventura</span>
+                    <span class="tag">#Xianxia</span>
+                    <span class="tag">#Regressão</span>
+                    <span class="tag">#Time Loop</span>
+                    <span class="tag">#Cultivo</span>
+                </div>
+            </div>
+        </section>
+
+        <div class="content-layout">
+            
+            <main class="chapters-section">
+                <div class="section-header">
+                    <h3>Capítulos</h3>
+                    <button class="sort-btn"><i class="fa-solid fa-arrow-down-a-z"></i> Ordenar</button>
+                </div>
+
+                <ul class="chapter-list">
+                    <li class="chapter-item">
+                        <div class="chapter-info">
+                            <span class="chapter-title">Capítulo 861 - Side Story - Conclusion</span>
+                            <span class="chapter-date">13 Mai, 2026</span>
+                        </div>
+                        <i class="fa-solid fa-play" style="font-size: 12px; color: var(--cor-do-texto);"></i>
+                    </li>
+                    <li class="chapter-item">
+                        <div class="chapter-info">
+                            <span class="chapter-title">Capítulo 860 - Side Story - Island Survival (5)</span>
+                            <span class="chapter-date">13 Mai, 2026</span>
+                        </div>
+                        <i class="fa-solid fa-play" style="font-size: 12px; color: var(--cor-do-texto);"></i>
+                    </li>
+                    <li class="chapter-item">
+                        <div class="chapter-info">
+                            <span class="chapter-title">Capítulo 859 - Side Story - Island Survival (4)</span>
+                            <span class="chapter-date">13 Mai, 2026</span>
+                        </div>
+                        <i class="fa-solid fa-play" style="font-size: 12px; color: var(--cor-do-texto);"></i>
+                    </li>
+                    <li class="chapter-item">
+                        <div class="chapter-info">
+                            <span class="chapter-title">Capítulo 858 - Side Story - Island Survival (3)</span>
+                            <span class="chapter-date">13 Mai, 2026</span>
+                        </div>
+                        <i class="fa-solid fa-play" style="font-size: 12px; color: var(--cor-do-texto);"></i>
+                    </li>
+                     <li class="chapter-item">
+                        <div class="chapter-info">
+                            <span class="chapter-title">Capítulo 1 - The Kill</span>
+                            <span class="chapter-date">10 Mar, 2026</span>
+                        </div>
+                        <span style="color: var(--azul-claro); font-size: 12px; font-weight: bold;">GRÁTIS</span>
+                    </li>
+                </ul>
+                
+                <div style="display: flex; justify-content: center; gap: 10px; margin-top: 30px;">
+                    <button class="btn-biblioteca btn" style="padding: 8px 15px;">Anterior</button>
+                    <button class="btn btn-ler" style="padding: 8px 15px;">1</button>
+                    <button class="btn-biblioteca btn" style="padding: 8px 15px;">2</button>
+                    <button class="btn-biblioteca btn" style="padding: 8px 15px;">Próximo</button>
+                </div>
+            </main>
+
+            <aside class="sidebar">
+                <div class="info-box">
+                    <h3>Sobre a Obra</h3>
+                    <div class="info-row">
+                        <span>Status</span>
+                        <span style="color: #10b981;">Em Andamento</span>
+                    </div>
+                    <div class="info-row">
+                        <span>Ano de Lançamento</span>
+                        <span>2023</span>
+                    </div>
+                    <div class="info-row">
+                        <span>Títulos Alternativos</span>
+                        <span>회귀수선전</span>
+                    </div>
+                    <div class="info-row">
+                        <span>Classificação</span>
+                        <span>Livre (G)</span>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <h3>Você também pode gostar</h3>
+                    
+                    <a href="#" style="text-decoration: none; display: flex; gap: 12px; margin-bottom: 15px;">
+                        <img src="https://images.novelpia.com/imagebox/cover/8920958742468bb03b9005085c822538_527189_ori.file" style="width: 50px; height: 70px; border-radius: 4px; object-fit: cover;" alt="Capa">
+                        <div style="display: flex; flex-direction: column; justify-content: center;">
+                            <p style="color: var(--cor-texto-claro); font-size: 13px; font-weight: 600; line-height: 1.3; margin-bottom: 4px;">
+                                I Am the Fated Villain
+                            </p>
+                            <span style="font-size: 11px; color: var(--azul-claro);"><i class="fa-solid fa-star"></i> 4.9</span>
+                        </div>
+                    </a>
+
+                    <a href="#" style="text-decoration: none; display: flex; gap: 12px; margin-bottom: 15px;">
+                        <img src="https://images.novelpia.com/imagebox/cover/982c7f53f3e7c84594c7943f2a8a8c3d_312456_ori.file" 
+                            style="width: 50px; height: 70px; border-radius: 4px; object-fit: cover;" alt="Capa">
+                        <div style="display: flex; flex-direction: column; justify-content: center;">
+                            <p style="color: var(--cor-texto-claro); font-size: 13px; font-weight: 600; line-height: 1.3; margin-bottom: 4px;">
+                                Shadow Slave
+                            </p>
+                            <span style="font-size: 11px; color: var(--azul-claro);"><i class="fa-solid fa-star"></i> 4.8</span>
+                        </div>
+                    </a>
+
+                    <a href="#" style="text-decoration: none; display: flex; gap: 12px;">
+                        <img src="https://images.novelpia.com/imagebox/cover/4412356742468bb03b9005085c822538_112233_ori.file" 
+                            style="width: 50px; height: 70px; border-radius: 4px; object-fit: cover;" alt="Capa">
+                        <div style="display: flex; flex-direction: column; justify-content: center;">
+                            <p style="color: var(--cor-texto-claro); font-size: 13px; font-weight: 600; line-height: 1.3; margin-bottom: 4px;">
+                                The Oracle Paths
+                            </p>
+                            <span style="font-size: 11px; color: var(--azul-claro);"><i class="fa-solid fa-star"></i> 4.5</span>
+                        </div>
+                    </a>
+                </div>
+            </aside>
+            
+        </div>
+    </div>
+</body>
+</html>
